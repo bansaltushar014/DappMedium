@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import web3 from './helper.js';
+import axios from "axios";
+import MyEditor from './myEditor.js';
 
-import './App.css';
 
 function App() {
 
@@ -8,28 +10,27 @@ function App() {
 
   useEffect(() => {
     try {
-
       if (!web3.eth.net.isListening()) {
         console.log("Not connected");
       } else {
         console.log("connected");
-        web3.version.getNetwork((err, netId) => {
-          switch (netId) {
-            case "1":
-              alert('This is mainnet')
+        web3.eth.net.getId((err, netId) => {
+        console.log(netId);
+        switch (netId) {
+        case 1:
+              // alert('This is mainnet')
               break
-              case "2":
-                alert('This is the deprecated Morden test network.')
-                break
-                case "3":
-                  alert('This is the ropsten test network.')
-                  break
-                  default:
-                    alert('This is an unknown network.')
-                  }
-                })
+        case 2:
+              // alert('This is the deprecated Morden test network.')
+              break
+        case 3:
+              // alert('This is the ropsten test network.')
+              break
+        default:
+              // alert('This is an unknown network.')
+              }
+        })
         InitializeContract();
-
       }
     } catch (e) {
       console.log("Exception is " + JSON.stringify(e));
@@ -51,7 +52,9 @@ function App() {
 
   return (
     <div>
+    working here
 
+    <MyEditor />
     </div>
   );
 }
