@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import {Editor, EditorState} from 'draft-js';
 import { FormControl, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
 import axios from "axios";
-import ipfsHelper from './ipfsHelper.js';
+
+
 
 class MyEditor extends React.Component {
 
@@ -15,7 +16,8 @@ class MyEditor extends React.Component {
       textofArticle: '',
       SubmittedofArticle: '',
       PaidAddress: '',
-      limit: ''
+      limit: '',
+      file: ''
     }
     this.postData = this.postData.bind(this);
     this.addToIpfs = this.addToIpfs.bind(this);
@@ -40,35 +42,11 @@ class MyEditor extends React.Component {
     })
     .then(r=> {
       console.log(r);
-      this.addToIpfs(r.data.filename);
     })
     .catch(e => {
       console.log("Error is "+ JSON.stringify(e));
     })
   }
-
-
-  addToIpfs = async (data) => {
-    console.log("Inside addToIpfs "+data);
-    // const file = await fetch("http://localhost:4000/articles/1598818950200.txt");
-    // console.log(file);
-    var file = new File({"name": "tushar"},  'sample.txt');
-    console.log(file);
-    const reader = new window.FileReader()
-    await reader.readAsArrayBuffer(file);
-    reader.onloadend = () => {
-      console.log(Buffer(reader.result));
-      // setBuffer(Buffer(reader.result))
-    }
-    // await ipfsHelper.files.add(data, async (error, result) => {
-    //   if (error) {
-    //     console.error(error)
-    //     return
-    //   }
-    //   console.log(result[0].hash);
-    // });
-  }
-
 
 
   titleArticle =  (e) => {
