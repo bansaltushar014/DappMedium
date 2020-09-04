@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Editor, EditorState} from 'draft-js';
 import { FormControl, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
 import axios from "axios";
+import web3 from './helper.js';
 
 
 
@@ -20,7 +21,25 @@ class MyEditor extends React.Component {
       file: ''
     }
     this.postData = this.postData.bind(this);
-    this.addToIpfs = this.addToIpfs.bind(this);
+    this.saveToContract = this.saveToContract.bind(this);
+    this.InitializeContract = this.InitializeContract.bind(this);
+  }
+
+  componentDidMount(){
+    this.InitializeContract();
+  }
+
+  InitializeContract = () => {
+    var that = this;
+    axios.get('http://localhost:4000/static/DappMedium.json')
+    .then(function (response) {
+      const Abi = response.data.abi;
+      const ContractAddress = response.data.networks[5777].address;
+      that.contractInstance = new web3.eth.Contract(Abi, ContractAddress);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   deposit =  (e) => {
@@ -41,10 +60,25 @@ class MyEditor extends React.Component {
       data: this.data
     })
     .then(r=> {
+      console.log(r.data.data);
+      this.saveToContract(r.data.data);
+    })
+    .catch(e => {
+      console.log(e);
+    })
+  }
+
+  saveToContract = (hash) => {
+
+    console.log(this.contractInstance);
+    console.log(this.state.PaidAddress);
+    this.contractInstance.methods.addArticle(this.state.PaidAddress, hash)
+    .send({from: '0x5484a8B79a6464cc86eFc56d40f75fc5D2FE24AE'})
+    .then(r => {
       console.log(r);
     })
     .catch(e => {
-      console.log("Error is "+ JSON.stringify(e));
+      console.log(e);
     })
   }
 
@@ -60,7 +94,7 @@ class MyEditor extends React.Component {
       e.target.value = e.target.value.substring(0, 1999);
 
     } else {
-      this.setState({textofArticle: e.target.value})
+      this.setState({textofArticle: e.target.value.replace(/[^a-zA-Z ]/g, "")})
     }
     this.setState({limit: e.target.value.length})
   }

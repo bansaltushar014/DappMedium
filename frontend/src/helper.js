@@ -1,7 +1,9 @@
 import Web3 from 'web3';
+import axios from "axios";
 
 const Initialize = {
   web3 : null,
+  // contractInstance: null,
   initial:function () {
     if (typeof web3 !== 'undefined' && window.ethereum) {
       // Use Mist/MetaMask's provider
@@ -15,7 +17,23 @@ const Initialize = {
 
     }
   }
+//   InitializeContract: async function() {
+//
+// }
 }
 
+// Initialize.InitializeContract().
+// then(r=>{
+//   console.log(r);
+// })
+
+// console.log(Initialize.contractInstance);
+// export default Initialize.contractInstance;
+// export default Initialize.InitializeContract()
+//   .then(r=> {
+//     return r;
+//   })
+
 Initialize.initial();
-export default Initialize.web3;
+
+export default Initialize.web3; 

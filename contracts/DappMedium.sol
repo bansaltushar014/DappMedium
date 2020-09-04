@@ -4,7 +4,7 @@ contract DappMedium{
 
     mapping(uint =>  string)contentHash;
     mapping(uint => address)contentWriter;
-    uint noOfarticle = 0;
+    uint public noOfarticle = 0;
 
     // function registerTowrite(address payable ad) public{
     //     writers[noOfwriters] = ad;
@@ -19,17 +19,18 @@ contract DappMedium{
         return noOfarticle;
     }
 
+
     function addArticle(address owner, string memory articleHash) public{
         contentHash[noOfarticle] = articleHash;
         contentWriter[noOfarticle] = owner;
         noOfarticle++;
     }
 
-    function getArticle(uint id) public returns(string memory){
+    function getArticle(uint id) view public returns(string memory){
         return contentHash[id];
     }
 
-    function getWriterAddress(uint id) public returns(address){
+    function getWriterAddress(uint id) view public returns(address){
         return contentWriter[id];
     }
 
