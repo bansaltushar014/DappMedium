@@ -69,17 +69,17 @@ class MyEditor extends React.Component {
   }
 
   saveToContract = (hash) => {
-
-    console.log(this.contractInstance);
-    console.log(this.state.PaidAddress);
+    web3.eth.getAccounts()
+    .then(account => {
     this.contractInstance.methods.addArticle(this.state.PaidAddress, hash)
-    .send({from: '0x5484a8B79a6464cc86eFc56d40f75fc5D2FE24AE'})
+    .send({from: account[0]})
     .then(r => {
       console.log(r);
     })
     .catch(e => {
       console.log(e);
     })
+  })
   }
 
 
@@ -91,11 +91,9 @@ class MyEditor extends React.Component {
 
     if(e.target.value.length >= 2000){
       alert("Not Allowed to enter text greater than 2000 characters!")
-      e.target.value = e.target.value.substring(0, 1999);
-
-    } else {
-      this.setState({textofArticle: e.target.value.replace(/[^a-zA-Z ]/g, "")})
+      e.target.value = e.target.value.substring(0, 1999);  
     }
+    this.setState({textofArticle: e.target.value.replace(/[^a-zA-Z ]/g, "")})
     this.setState({limit: e.target.value.length})
   }
 

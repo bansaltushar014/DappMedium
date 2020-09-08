@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from "axios";
+import { FormControl, Card, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
+import web3 from './helper.js';
 
-// function Dashboard(props){
   class Dashboard extends React.Component {
 
     constructor(){
@@ -14,6 +15,8 @@ import axios from "axios";
       }
 
     this.getNoOfArticles = this.getNoOfArticles.bind(this);
+    this.payToRead = this.payToRead.bind(this);
+    this.getWriteAddress = this.getWriteAddress.bind(this);
     // this.getArticle = this.getArticle.bind(this);
     global.addresses = [];
     }
@@ -26,6 +29,7 @@ import axios from "axios";
     this.getNoOfArticles()
   }
 
+  // Get the number of articles exist in Blockchain
   getNoOfArticles = async () => {
     console.log("Inside getNoOfArticles;");
     await this.contractInstance.methods.noOfarticles().call()
@@ -36,6 +40,7 @@ import axios from "axios";
     .catch(e => {console.log(e)})
   }
 
+  // Get the articles hashes one by one
   getTheArticle = async (num) => {
 
     console.log("Inside getTheArticle");
@@ -56,6 +61,7 @@ import axios from "axios";
     }
   }
 
+  // Extract the data from the hash one by one
   getDataFromIpfs = async (hash, num) => {
     var that = this;
     console.log("Inside getDataFromIpfs!");
@@ -64,7 +70,6 @@ import axios from "axios";
       await axios.get('https://ipfs.io/ipfs/'+hash[i])
       .then(r => {
         console.log(r);
-        // this.state.articlesData.push(r);
         var data = that.state.articlesData.concat(r);
         that.setState({ articlesData: data })
         that.setState({show : 1});
@@ -75,66 +80,76 @@ import axios from "axios";
     }
   }
 
-  getTheAddress = () => {
+  // Get the Writer's address of article
+  getWriteAddress = (index) => {
     console.log("Inside getTheAddress");
-    this.contractInstance.methods.getWriterAddress(0).call()
-    .then(r => {console.log(r)})
-    .catch(e => {console.log(e)});
+    this.contractInstance.methods.getWriterAddress(index).call()
+    .then(r => {
+      console.log(r)
+      return r;
+      })
+    .catch(e => {
+      console.log(e)
+      return e;
+      });
   }
 
-// pending q is how to return the value , as inside "then" i am returning a value but not getting accepted
-// but for the function return accepting, why
-// getNoOfArticles = async () => {
-//   console.log("Inside getNoOfArticles;");
-//   await this.contractInstance.methods.noOfarticles().call()
-//   .then(r => {
-//     console.log(r)
-//     return r;
-//   })
-//   .catch(e => {console.log(e)})
-//
-//   return "4";
-// }
-
-
-// it is ok to call setState in componentDidmount but it will render twice, which is lit less effective.
-//   render() {
-//     return (
-//       <div>
-//         Dashboard
-//         <p> data is {this.state.show} {this.state.articlesData[0]}</p>
-//       // {
-//       //   this.state.articlesData.map((item) => {
-//       //     return <li> {item.data} </li>
-//       //   })
-//       // }
-//       </div>
-//
-//     );
-//     }
-// }
-
-  callFun = (index) => {
-    console.log("Index is " + index);
+  // Get the index of particular article and transfer the money to Writer
+  // On its success redirect to OpenPDF
+  payToRead = async (index) => {
+    var that = this;
+    await web3.eth.getAccounts(function(error, result) {
+      that.contractInstance.methods.getWriterAddress(index).call()
+      .then(r=> {
+        var that1 = that;
+        web3.eth.sendTransaction({from:result[0],
+                                  to:r, value:
+                                  web3.utils.toWei("0.01", 'ether'),
+                                  gasLimit: 21000,
+                                  gasPrice: 20000000000},
+               function(err, transactionHash) {
+                        if (!err)
+                        console.log(transactionHash);
+        })
+      .then(r=> {
+        console.log("Transaction Confirmed " + JSON.stringify(r));
+        var sendHash = window.open("./openPdf");
+        sendHash.hashIs = that1.state.articlesData[index];
+      })
+      })
+    });
   }
 
 render() {
-  // There are many ways to render the data, {} or () have a impant on the rendering.
-  // Declaring the const before the return is necessary when this.state is not working there
+
   const {write, show, articlesData, demo} = this.state;
+
   return (
-  <>
+    <Container >
+
+    <Row className="border border-dark" style={{padding: "20px"}}>
   {
     articlesData.map((item, index) => {
-      // return is required to show data
       return <div key={index}>
       <br></br>
-      <button  onClick={()=>{this.callFun(index)}}>{item.data.title}</button>
+      <Card style={{ width: '28rem' }}>
+        <Card.Body>
+          <Card.Title>
+            {item.data.title}
+          </Card.Title>
+          <Card.Text>
+
+          <textarea  style={{overflow:'hidden', width: '25rem' }} name="description" rows="4" defaultValue={item.data.text} />
+
+          </Card.Text>
+          <Button onClick={() => this.payToRead(index)} variant="primary">Read for 0.01 Eth</Button>
+        </Card.Body>
+      </Card>
       </div>
       })
   }
-
-  </>
+  </Row>
+  </Container>
 
   );
 }

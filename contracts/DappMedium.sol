@@ -6,11 +6,6 @@ contract DappMedium{
     mapping(uint => address)contentWriter;
     uint public noOfarticle = 0;
 
-    // function registerTowrite(address payable ad) public{
-    //     writers[noOfwriters] = ad;
-    //     noOfwriters++;
-    // }
-
     constructor() payable public{
 
     }
