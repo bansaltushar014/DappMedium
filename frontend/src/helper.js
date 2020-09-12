@@ -1,39 +1,25 @@
 import Web3 from 'web3';
 import axios from "axios";
+const dotenv = require('dotenv');
+
+const env = dotenv.config();
 
 const Initialize = {
-  web3 : null,
-  // contractInstance: null,
-  initial:function () {
+  web3: null,
+  initial: function () {
     if (typeof web3 !== 'undefined' && window.ethereum) {
-      // Use Mist/MetaMask's provider
       console.log("connected metamask!");
+      console.log(process.env.Ropsten_URL);
       this.web3 = new Web3(window.ethereum);
       window.ethereum.enable();
     } else {
       console.log("Connect via infura");
-      // this.web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-      this.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/cdfba71cda344898bfcfeaee923cf849"));
-
+      this.web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+      // this.web3 = new Web3(new Web3.providers.HttpProvider(process.env.Ropsten_URL));
     }
   }
-//   InitializeContract: async function() {
-//
-// }
 }
-
-// Initialize.InitializeContract().
-// then(r=>{
-//   console.log(r);
-// })
-
-// console.log(Initialize.contractInstance);
-// export default Initialize.contractInstance;
-// export default Initialize.InitializeContract()
-//   .then(r=> {
-//     return r;
-//   })
 
 Initialize.initial();
 
-export default Initialize.web3; 
+export default Initialize.web3;

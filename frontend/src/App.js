@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import web3 from './helper.js';
 import axios from "axios";
-import MyEditor from './myEditor.js';
+import Write from './write.js';
 import Dashboard from './dashboard.js';
 import pdf from './openPdf';
-
+import { Navbar, Button } from 'react-bootstrap';
 
 function App() {
 
   const [write, setwrite] = useState(1);
   const [instance, setinstance] = useState('');
-  
+
   var contractInstance = useRef(0);
 
-  useEffect( () => {
+  useEffect(() => {
 
     try {
       // if (!web3.eth.net.isListening()) {
@@ -37,7 +37,7 @@ function App() {
       //         }
       //   })
       //
-        InitializeContract();
+      InitializeContract();
       // }
     } catch (e) {
       console.log("Exception is " + JSON.stringify(e));
@@ -47,14 +47,14 @@ function App() {
   // Initialize te contract
   const InitializeContract = () => {
     axios.get('http://localhost:4000/static/DappMedium.json')
-    .then(function (response) {
-      const Abi = response.data.abi;
-      const ContractAddress = response.data.networks[5777].address;
-      contractInstance = new web3.eth.Contract(Abi, ContractAddress);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (response) {
+        const Abi = response.data.abi;
+        const ContractAddress = response.data.networks[5777].address;
+        contractInstance = new web3.eth.Contract(Abi, ContractAddress);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   const callRender = (id) => {
@@ -64,19 +64,36 @@ function App() {
 
   return (
     <div>
+      <Navbar bg="dark" className="justify-content-end">
+        <Navbar.Brand >
+          {' '}
+          <span style={{ color: "white" }}> DappMedium </span>
+          {write == 1 &&
+            <>
+              <Button variant="light" onClick={() => callRender(0)}>Dashboard</Button>
+            </>
+          }
+          {write == 0 &&
+            <>
+              <Button variant="light" onClick={() => callRender(1)}>Write</Button>
+            </>
+          }
+        </Navbar.Brand>
+      </Navbar>
 
-    { write == 1 &&
-      <>
-        <button onClick={() => callRender(0)}>Dashboard</button>
-        <MyEditor />
-      </>
-    }
-    { write == 0 &&
-      <>
-      <button onClick={() => callRender(1)}>Write</button>
-      <Dashboard contractInstance={instance}/>
-      </>
-    }
+      <br></br>
+      <br></br>
+
+      {write == 1 &&
+        <>
+          <Write />
+        </>
+      }
+      {write == 0 &&
+        <>
+          <Dashboard contractInstance={instance} />
+        </>
+      }
 
     </div>
   );
