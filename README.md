@@ -9,7 +9,7 @@ DappMedium is a platform where anybody can write their content and the reader wi
 * Ganache
 * Metamask 
 
-### How to Start
+### Installation Steps
 * git clone
 * cd DappMedium
 * npm install 
