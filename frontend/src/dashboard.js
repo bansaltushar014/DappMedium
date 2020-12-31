@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from "axios";
-import { FormControl, Card, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
+import { Card, Spinner, Row, Container, Button } from 'react-bootstrap';
 import web3 from './helper.js';
 
 class Dashboard extends React.Component {
@@ -109,7 +109,7 @@ class Dashboard extends React.Component {
           web3.eth.sendTransaction({
             from: result[0],
             to: r, value:
-              web3.utils.toWei("0.01", 'ether'),
+            web3.utils.toWei("0.01", 'ether'),
             gasLimit: 21000,
             gasPrice: 20000000000
           }, function (err, transactionHash) {
@@ -127,7 +127,7 @@ class Dashboard extends React.Component {
 
   render() {
 
-    const { write, show, articlesData, demo, loading } = this.state;
+    const { articlesData, loading } = this.state;
 
     return (
       <>
@@ -143,13 +143,13 @@ class Dashboard extends React.Component {
           <>
 
             <Container >
-
-
-
               {
                 articlesData.map((item, index) => {
                   return <div key={index}>
-                    <Row className="border border-dark" style={{ padding: "20px" }}>
+                    <Row 
+                      className="border border-dark"
+                      style={{ padding: "20px" }}
+                    >
                       <br></br>
                       <Card style={{ width: '98%' }}>
                         <Card.Body>
@@ -157,17 +157,26 @@ class Dashboard extends React.Component {
                             {item.data.title}
                           </Card.Title>
                           <Card.Text>
-                            <textarea style={{ overflow: 'hidden', width: '90%' }} name="description" rows="2" defaultValue={item.data.text} />
+                            <textarea 
+                              style={{ overflow: 'hidden', width: '90%' }}
+                              name="description"
+                              rows="2"
+                              defaultValue={item.data.text} 
+                            />
                           </Card.Text>
-                          <Button onClick={() => this.payToRead(index)} variant="primary">Read for 0.01 Eth</Button>
+                          <Button 
+                            onClick={() => this.payToRead(index)}
+                            variant="primary">
+                            Read for 0.01 Eth
+                          </Button>
                         </Card.Body>
                       </Card>
                     </Row>
                   </div>
                 })
               }
-
             </Container>
+
             <br></br>
             <br></br>
 

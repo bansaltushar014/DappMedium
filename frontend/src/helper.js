@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import axios from "axios";
 const dotenv = require('dotenv');
 
 const env = dotenv.config();

@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Editor, EditorState } from 'draft-js';
-import { FormControl, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
+// import { FormControl, FormGroup, ControlLabel, Modal, Spinner, HelpBlock, Checkbox, Radio, Row, Container, Col, Form, Button, ThemeProvider } from 'react-bootstrap';
 import axios from "axios";
 import web3 from './helper.js';
-
 
 
 class MyEditor extends React.Component {
@@ -123,7 +122,7 @@ class MyEditor extends React.Component {
                 <Form.Control onChange={this.textArticle} as="textarea" rows="15" />
                 <Form.Text className="text-muted">
                   words: {this.state.limit}/2000
-      </Form.Text>
+                </Form.Text>
               </Form.Group>
               <Form.Group controlId="formBasicEmail1">
                 <Form.Label>Submitted By:</Form.Label>
@@ -137,7 +136,7 @@ class MyEditor extends React.Component {
               </Form.Group>
               <Button variant="primary" type="submit">
                 Submit
-      </Button>
+              </Button>
             </Form>
           </Col>
           <Col sm={1}></Col>

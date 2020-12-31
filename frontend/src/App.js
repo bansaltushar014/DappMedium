@@ -3,7 +3,6 @@ import web3 from './helper.js';
 import axios from "axios";
 import Write from './write.js';
 import Dashboard from './dashboard.js';
-import pdf from './openPdf';
 import { Navbar, Button } from 'react-bootstrap';
 
 function App() {
